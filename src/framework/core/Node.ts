@@ -1,17 +1,31 @@
-import JsToCss from "./parsers/JsToCSS"
+import Leaf from "./Leaf";
 import Style from "./Style"
 
-export default class Element {
-    constructor(options) {
+export interface NodeOptions {
+    text: string;
+    tag: string;
+    children: Node[];
+    classes: string[];
+    id: string;
+    events?: Record<string, (event: Event) => void>;
+    style: Record<string, string>;
+}
+
+export default class Node {
+
+    private options: NodeOptions;
+    private tag: HTMLElement;
+    private children: Node[];
+    private shadow?: ShadowRoot;
+    private leaf: Leaf;
+
+    constructor(options: NodeOptions) {
         this.options = options
+        this.leaf = document.createElement('leaf')
     }
 
-    set text(value) {
+    set text(value: string) {
         this.options.text = value
-    }
-
-    leaf() {
-        return this.document.createElement('leaf')
     }
 
     mount() {
@@ -21,7 +35,7 @@ export default class Element {
 
         this.children = this.options.children ?? []
 
-        this.tag = this.leaf().appendChild(document.createElement(this.options.tag))
+        this.tag = document.createElement(this.options.tag)
 
         this.addListeners()
 
@@ -31,8 +45,8 @@ export default class Element {
             }
         }
 
-        this.shadow = this.tag.attachShadow({mode: 'open'})
-        this.shadow.appendChild()
+        this.shadow = this.leaf.attachShadow({mode: 'open'})
+        this.shadow.appendChild(this.style())
 
         this.tag.id = this.options.id ?? ""
 
@@ -52,10 +66,14 @@ export default class Element {
 
         this.tag.append(...elements)
 
-        return this.tag
+        this.leaf.appendChild(this.tag)
+
+        return this.leaf
     }
 
     style() {
-        return new Style(this.tag, this.options.style).style
+        const style = document.createElement('style')
+        style.textContent = Style.parse(this.tag, this.options.style)
+        return style
     }
 }

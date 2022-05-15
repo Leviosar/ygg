@@ -1,7 +1,7 @@
-import Element from "../core/Element.js"
+import Element, { NodeOptions } from "../core/Node"
 
 export class Main extends Element {
-    constructor(options) {
+    constructor(options: NodeOptions) {
         options.tag = "main"
         super(options)
     }

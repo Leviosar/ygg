@@ -1,7 +1,7 @@
-import Element from "../core/Element.js"
+import Element, { NodeOptions } from "../core/Node.js"
 
 export class Anchor extends Element {
-    constructor(options) {
+    constructor(options: NodeOptions) {
         options.tag = "a"
         super(options)
     }
