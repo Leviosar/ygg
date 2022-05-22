@@ -1,8 +1,8 @@
 {
-  "name": "gruta",
+  "name": "ygg",
   "version": "1.0.0",
   "description": "A brand new javascript framework",
-  "main": "./src/index.js",
+  "main": "./dist/ygg.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode=production",
