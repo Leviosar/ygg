@@ -1,6 +1,6 @@
-import Element, { NodeOptions } from "../core/Node"
+import Node, { NodeOptions } from "../core/Node"
 
-export class Section extends Element {
+export class Section extends Node {
     constructor(options: NodeOptions) {
         options.tag = "section"
         super(options)

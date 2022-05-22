@@ -1,27 +1,31 @@
+import { EventHandler } from "../types/EventHandler";
+import { Stylesheet } from "../types/Stylesheet";
 import Leaf from "./Leaf";
 import Style from "./Style"
 
 export interface NodeOptions {
-    text: string;
-    tag: string;
     children: Node[];
     classes: string[];
+    events?: Record<string, EventHandler>;
     id: string;
-    events?: Record<string, (event: Event) => void>;
-    style: Record<string, string>;
+    style: Stylesheet;
+    tag: string;
+    text: string;
 }
 
 export default class Node {
 
-    private options: NodeOptions;
-    private tag: HTMLElement;
-    private children: Node[];
-    private shadow?: ShadowRoot;
-    private leaf: Leaf;
+    protected options: NodeOptions;
+    protected tag: HTMLElement;
+    protected children: Node[];
+    protected shadow?: ShadowRoot;
+    protected leaf: Leaf;
+    protected baseStyle?: Stylesheet;
+    protected attributes: Record<string, string> = {};
 
     constructor(options: NodeOptions) {
         this.options = options
-        this.leaf = document.createElement('leaf')
+        this.leaf = document.createElement('ygg-leaf') as Leaf
     }
 
     set text(value: string) {
@@ -35,27 +39,49 @@ export default class Node {
 
         this.children = this.options.children ?? []
 
-        this.tag = document.createElement(this.options.tag)
+        this.createTag()
+
+        this.mergeBaseStyle()
+
+        this.createShadow()
 
         this.addListeners()
 
-        if (this.options.classes !== undefined) {
-            for (const _class of this.options.classes) {
-                this.tag.classList.add(_class)
-            }
-        }
+        this.addClasses()
 
-        this.shadow = this.leaf.attachShadow({mode: 'open'})
-        this.shadow.appendChild(this.style())
+        this.addAttributes()
 
-        this.tag.id = this.options.id ?? ""
+        this.specificSetup()
+    }
 
-        this.tag.innerText = this.options.text ?? ""
+    createTag() {
+        this.tag = document.createElement(this.options.tag)
+        if (this.options.id) this.tag.id = this.options.id
+        if (this.options.text) this.tag.innerText = this.options.text
+    }
+
+    createShadow() {
+        const shadow = this.leaf.attachShadow({mode: 'open'})
+        this.shadow = shadow
+        this.leaf.shadow = shadow
+        this.leaf.shadow.appendChild(this.style())
     }
 
     addListeners() {
         for (const event in this.options.events) {
-            this.tag.addEventListener(`${event}`, this.options.events[event])
+            this.tag.addEventListener(`${event.toLowerCase()}`, this.options.events[event])
+        }
+    }
+
+    addClasses() {
+        for (const _class of this.options.classes) {
+            this.tag.classList.add(_class)
+        }
+    }
+
+    addAttributes() {
+        for (const key in this.attributes) {
+            this.tag.setAttribute(key, this.attributes[key])
         }
     }
 
@@ -66,14 +92,22 @@ export default class Node {
 
         this.tag.append(...elements)
 
-        this.leaf.appendChild(this.tag)
+        this.leaf.shadow.appendChild(this.tag)
 
         return this.leaf
+    }
+
+    mergeBaseStyle() {
+        this.options.style = { ... this.options.style, ... this.baseStyle}
     }
 
     style() {
         const style = document.createElement('style')
         style.textContent = Style.parse(this.tag, this.options.style)
         return style
+    }
+
+    specificSetup() : void | boolean {
+        return true
     }
 }

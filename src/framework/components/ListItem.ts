@@ -1,10 +1,10 @@
-import Element, { NodeOptions } from "../core/Node"
+import Node, { NodeOptions } from "../core/Node"
 
 export function ListItem(options: NodeOptions) {
     return new _ListItem(options)
 } 
 
-class _ListItem extends Element {
+class _ListItem extends Node {
     constructor(options: NodeOptions) {
         options.tag = "li"
         super(options)

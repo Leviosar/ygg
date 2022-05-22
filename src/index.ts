@@ -1,3 +1,11 @@
-export * from './framework/components/index.js';
+import './shims/index'
 
-export { Ygg } from './framework/core/Lib.js'
+export * from './framework/components/index'
+
+export { Ygg } from './framework/core/Ygg'
+
+export class A {
+    doSmt() {
+        console.log('im doing something')
+    }
+}

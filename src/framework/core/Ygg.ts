@@ -23,11 +23,13 @@ export class Ygg {
         }
 
         this.app = options.app
+
+        this.registerLeaf()
     }
 
     registerLeaf() {
-        if (!customElements.get('leaf')) {
-            customElements.define('leaf', Leaf)
+        if (!customElements.get('ygg-leaf')) {
+            customElements.define('ygg-leaf', Leaf)
         }
     }
 

@@ -1,6 +1,6 @@
-import Element, { NodeOptions } from "../core/Node"
+import Node, { NodeOptions } from "../core/Node"
 
-export class Nav extends Element {
+export class Nav extends Node {
     constructor(options: NodeOptions) {
         options.tag = "nav"
         super(options)

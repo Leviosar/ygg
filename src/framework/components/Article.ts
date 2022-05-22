@@ -1,8 +1,8 @@
-import Element, { NodeOptions } from "../core/Node"
+import Node, { NodeOptions } from "../core/Node"
 
-export class Article extends Element {
+export class Article extends Node {
     constructor(options: NodeOptions) {
-        options.tag = "li"
+        options.tag = "article"
         super(options)
     }
 }
