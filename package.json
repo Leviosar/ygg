@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode=production",
-    "dev": "webpack --mode=development"
+    "dev": "webpack --mode=development",
+    "watch": "webpack --mode=development --watch",
+    "clean": "rm -rf ./dist/*"
   },
   "author": "Joao Vitor Maia <maia.tostring@gmail.com>",
   "license": "GPL-3.0",
